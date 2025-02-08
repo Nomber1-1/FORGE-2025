@@ -69,26 +69,38 @@ void loop() {
 
   if (joystick_x_1 > 800) { // Turn left
     Serial.println("Turn left");
+
+    for (int speed = 0; speed < 255; speed++) {
+      analogWrite(MOTOR_A1A, speed++);
+      analogWrite(MOTOR_B1B, speed++);
+    }
     // Right Wheel
-    analogWrite(MOTOR_A1A, 255);
+    //analogWrite(MOTOR_A1A, 255);
     analogWrite(MOTOR_A1B, 0);
 
     // Left Wheel
     analogWrite(MOTOR_B1A, 0);
-    analogWrite(MOTOR_B1B, 255);
-    delay(1000);
+    //analogWrite(MOTOR_B1B, 255);
+    delay(100);
   }  else if (joystick_x_1 < 300) { // Turn right
     Serial.println("Turn right");
+
+    for (int speed = 0; speed < 255; speed++) {
+      analogWrite(MOTOR_A1B, speed++);
+      analogWrite(MOTOR_B1A, speed++);
+    }
     // Right Wheel
     analogWrite(MOTOR_A1A, 0);
-    analogWrite(MOTOR_A1B, 255);
+    //analogWrite(MOTOR_A1B, 255);
 
     // Left Wheel
-    analogWrite(MOTOR_B1A, 255);
+    //analogWrite(MOTOR_B1A, 255);
     analogWrite(MOTOR_B1B, 0);
-    delay(1000);
+    delay(100);
   } else if (joystick_y_1 < 300) { // Go straight
     Serial.println("Vamosssss");
+
+    
     // Right Wheel
     analogWrite(MOTOR_A1A, 255);
     analogWrite(MOTOR_A1B, 0);
@@ -96,7 +108,7 @@ void loop() {
     // Left Wheel
     analogWrite(MOTOR_B1A, 255);
     analogWrite(MOTOR_B1B, 0);
-    delay(1000);
+    delay(100);
   } else if (joystick_y_1 > 700) { // Go back
     Serial.println("Retreat");
     // Right Wheel
@@ -106,7 +118,7 @@ void loop() {
     // Left Wheel
     analogWrite(MOTOR_B1A, 0);
     analogWrite(MOTOR_B1B, 255);
-    delay(1000);
+    delay(100);
   } else { // Stay
     Serial.println("Stay");
     // Right Wheel
@@ -116,7 +128,7 @@ void loop() {
     // Left Wheel
     analogWrite(MOTOR_B1A, 0);
     analogWrite(MOTOR_B1B, 0);
-    delay(1000); 
+    delay(100); 
   }
   /*
   if (button_counter % 4 == 0){
