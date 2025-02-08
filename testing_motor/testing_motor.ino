@@ -17,8 +17,9 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  Serial.println("Forward");
   // Right Wheel
-  analogWrite(MOTOR_A1A, 255);
+ // analogWrite(MOTOR_A1A, 255);
   analogWrite(MOTOR_A1B, 0);
 
   // Left Wheel
@@ -27,11 +28,12 @@ void loop() {
   delay(2000);
 
   // to stop
-  analogWrite(MOTOR_A1A, 0);
+  Serial.println("Stop");
+  //analogWrite(MOTOR_A1A, 0);
   analogWrite(MOTOR_A1B, 0);
 
   // Left Wheel
-  analogWrite(MOTOR_B1A, 0);
+ // analogWrite(MOTOR_B1A, 0);
   analogWrite(MOTOR_B1B, 0);
   delay(1000);
 }

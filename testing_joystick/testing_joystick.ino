@@ -1,15 +1,19 @@
 int variable;
 
+// Joystick Ports
 #define JOY1_X A1
 #define JOY1_Y A0
-#define JOY2_X A2
-#define JOY2_Y A3
+#define JOY2_X A4
+#define JOY2_Y A5
 #define BUTTON_1 2
 #define BUTTON_2 4
 
-#define SW 2
+// Motor Ports
+#define MOTOR_A1A 9
+#define MOTOR_A1B 10
+#define MOTOR_B1A 5 
+#define MOTOR_B1B 6
 
-#define PI 3.14
 int x = 100;
 int y;
 int button_counter = 0;
@@ -37,7 +41,14 @@ void setup() {
   pinMode(JOY2_Y, INPUT);
   pinMode(BUTTON_1, INPUT_PULLUP);  //active high so when pressed is 0
   pinMode(BUTTON_2, INPUT_PULLUP);  //active high so when pressed is 0
+  
+  // Right Wheel
+  pinMode(MOTOR_A1A, OUTPUT);
+  pinMode(MOTOR_A1B, OUTPUT);
 
+  // Left Wheel
+  pinMode(MOTOR_B1A, OUTPUT);
+  pinMode(MOTOR_B1B, OUTPUT);
   Serial.begin(9600);
 }
 
@@ -48,19 +59,75 @@ void loop() {
   joystick_x_2 = analogRead(JOY2_X);
   joystick_y_2 = analogRead(JOY2_Y);  //
   button_1 = digitalRead(BUTTON_2);
-  //delay(1000);
 
+  /*
   if (button_1 == 0){
     button_counter +=1;
     delay(1000);
   }
+  */
+
+  if (joystick_x_1 > 800) { // Turn left
+    Serial.println("Turn left");
+    // Right Wheel
+    analogWrite(MOTOR_A1A, 255);
+    analogWrite(MOTOR_A1B, 0);
+
+    // Left Wheel
+    analogWrite(MOTOR_B1A, 0);
+    analogWrite(MOTOR_B1B, 255);
+    delay(1000);
+  }  else if (joystick_x_1 < 300) { // Turn right
+    Serial.println("Turn right");
+    // Right Wheel
+    analogWrite(MOTOR_A1A, 0);
+    analogWrite(MOTOR_A1B, 255);
+
+    // Left Wheel
+    analogWrite(MOTOR_B1A, 255);
+    analogWrite(MOTOR_B1B, 0);
+    delay(1000);
+  } else if (joystick_y_1 < 300) { // Go straight
+    Serial.println("Vamosssss");
+    // Right Wheel
+    analogWrite(MOTOR_A1A, 255);
+    analogWrite(MOTOR_A1B, 0);
+
+    // Left Wheel
+    analogWrite(MOTOR_B1A, 255);
+    analogWrite(MOTOR_B1B, 0);
+    delay(1000);
+  } else if (joystick_y_1 > 700) { // Go back
+    Serial.println("Retreat");
+    // Right Wheel
+    analogWrite(MOTOR_A1A, 0);
+    analogWrite(MOTOR_A1B, 255);
+
+    // Left Wheel
+    analogWrite(MOTOR_B1A, 0);
+    analogWrite(MOTOR_B1B, 255);
+    delay(1000);
+  } else { // Stay
+    Serial.println("Stay");
+    // Right Wheel
+    analogWrite(MOTOR_A1A, 0);
+    analogWrite(MOTOR_A1B, 0);
+
+    // Left Wheel
+    analogWrite(MOTOR_B1A, 0);
+    analogWrite(MOTOR_B1B, 0);
+    delay(1000); 
+  }
+  /*
   if (button_counter % 4 == 0){
-    Serial.print("side movement right: ");
+    Serial.print("side movement right: "); // 0 = right / 1023 = left
     Serial.println(joystick_x_1);
+
   }
   else if (button_counter % 4 == 1){
-    Serial.print("up movement right: ");
+    Serial.print("up movement right: "); // 0 = up / 1023 = down
     Serial.println(joystick_y_1);
+
   }
   else if (button_counter % 4 == 2){
     Serial.print("side movement left: ");
@@ -70,5 +137,5 @@ void loop() {
     Serial.print("up movement left: ");
     Serial.println(joystick_y_2);
   }
-  //Serial.end();
+  */
 }
