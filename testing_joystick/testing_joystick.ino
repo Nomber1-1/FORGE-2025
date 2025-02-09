@@ -1,4 +1,4 @@
-int variable;
+#include <Servo.h>
 
 // Joystick Ports
 #define JOY1_X A1
@@ -14,24 +14,16 @@ int variable;
 #define MOTOR_B1A 5 
 #define MOTOR_B1B 6
 
-int x = 100;
-int y;
+Servo myservo;
+
+int pos = 0;
 int button_counter = 0;
 int joystick_x_1;
 int joystick_y_1;
 int joystick_x_2;
 int joystick_y_2;
 int button_1;
-
-int readJoystick() {
-  int x;
-  // reading things from the joystick
-  return x;
-}
-
-void goForward(int speed) {
-  //analogWrite(MOTOR, speed);
-}
+int button_2;
 
 void setup() {
   // put your setup code here, to run once:
@@ -39,8 +31,8 @@ void setup() {
   pinMode(JOY1_Y, INPUT);
   pinMode(JOY2_X, INPUT);
   pinMode(JOY2_Y, INPUT);
-  pinMode(BUTTON_1, INPUT_PULLUP);  //active high so when pressed is 0
-  pinMode(BUTTON_2, INPUT_PULLUP);  //active high so when pressed is 0
+  pinMode(BUTTON_1, INPUT_PULLUP);
+  pinMode(BUTTON_2, INPUT_PULLUP);
   
   // Right Wheel
   pinMode(MOTOR_A1A, OUTPUT);
@@ -50,76 +42,96 @@ void setup() {
   pinMode(MOTOR_B1A, OUTPUT);
   pinMode(MOTOR_B1B, OUTPUT);
   Serial.begin(9600);
+
+  // Kicking Servo
+  myservo.attach(11);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  joystick_x_1 = analogRead(JOY1_X);
-  joystick_y_1 = analogRead(JOY1_Y);  //
-  joystick_x_2 = analogRead(JOY2_X);
-  joystick_y_2 = analogRead(JOY2_Y);  //
-  button_1 = digitalRead(BUTTON_2);
+void kick() {
+  Serial.println("GOAL!!!!");
+  for (pos = 70; pos >= -20; pos -= 1) {
+    myservo.write(pos);
+    delay(1);
+  }
+  for (pos = -20; pos <= 70; pos += 1) {
+    myservo.write(pos);
+    delay(10);
+  }
+}
 
+void turn_left() {
+  Serial.println("Turn left");
   /*
-  if (button_1 == 0){
-    button_counter +=1;
-    delay(1000);
+  for (int speed = 0; speed < 255; speed++) {
+    analogWrite(MOTOR_A1A, speed++);
+    analogWrite(MOTOR_B1B, speed++);
+    delay(10);
   }
   */
+  // Right Wheel
+  //analogWrite(MOTOR_A1A, 255);
+  analogWrite(MOTOR_A1B, 0);
+  // Left Wheel
+  analogWrite(MOTOR_B1A, 0);
+  analogWrite(MOTOR_B1B, 255);
+  delay(100);
+}
 
-  if (joystick_x_1 > 800) { // Turn left
-    Serial.println("Turn left");
+void turn_right() {
+  Serial.println("Turn right");
+  /*
+  for (int speed = 0; speed < 255; speed++) {
+    analogWrite(MOTOR_A1B, speed++);
+    analogWrite(MOTOR_B1A, speed++);
+    delay(10);
+  }
+  */
+  // Right Wheel
+  analogWrite(MOTOR_A1A, 0);
+  //analogWrite(MOTOR_A1B, 255);
+  // Left Wheel
+  analogWrite(MOTOR_B1A, 255);
+  analogWrite(MOTOR_B1B, 0);
+  delay(100);
+}
 
-    for (int speed = 0; speed < 255; speed++) {
-      analogWrite(MOTOR_A1A, speed++);
-      analogWrite(MOTOR_B1B, speed++);
-    }
-    // Right Wheel
-    //analogWrite(MOTOR_A1A, 255);
-    analogWrite(MOTOR_A1B, 0);
+void go_forward() {
+  Serial.println("Vamosssss");
+  /*
+  for (int speed = 0; speed < 255; speed++) {
+    analogWrite(MOTOR_A1A, speed++);
+    analogWrite(MOTOR_B1A, speed++);
+    delay(10);
+  }
+  */
+  // Right Wheel
+  analogWrite(MOTOR_A1A, 255);
+  analogWrite(MOTOR_A1B, 0);
+  // Left Wheel
+  analogWrite(MOTOR_B1A, 255);
+  analogWrite(MOTOR_B1B, 0);
+  delay(100);
+}
 
-    // Left Wheel
-    analogWrite(MOTOR_B1A, 0);
-    //analogWrite(MOTOR_B1B, 255);
-    delay(100);
-  }  else if (joystick_x_1 < 300) { // Turn right
-    Serial.println("Turn right");
+void go_back() {
+  Serial.println("Retreat");
+  /*
+  for (int speed = 0; speed < 255; speed++) {
+    analogWrite(MOTOR_A1B, speed++);
+    analogWrite(MOTOR_B1B, speed++);
+    delay(10);
+  }
+  */
+  // Right Wheel
+  analogWrite(MOTOR_A1A, 0);
+  analogWrite(MOTOR_A1B, 255);
+  // Left Wheel
+  analogWrite(MOTOR_B1A, 0);
+  analogWrite(MOTOR_B1B, 255);
+  delay(100);
+}
 
-    for (int speed = 0; speed < 255; speed++) {
-      analogWrite(MOTOR_A1B, speed++);
-      analogWrite(MOTOR_B1A, speed++);
-    }
-    // Right Wheel
-    analogWrite(MOTOR_A1A, 0);
-    //analogWrite(MOTOR_A1B, 255);
-
-    // Left Wheel
-    //analogWrite(MOTOR_B1A, 255);
-    analogWrite(MOTOR_B1B, 0);
-    delay(100);
-  } else if (joystick_y_1 < 300) { // Go straight
-    Serial.println("Vamosssss");
-
-    
-    // Right Wheel
-    analogWrite(MOTOR_A1A, 255);
-    analogWrite(MOTOR_A1B, 0);
-
-    // Left Wheel
-    analogWrite(MOTOR_B1A, 255);
-    analogWrite(MOTOR_B1B, 0);
-    delay(100);
-  } else if (joystick_y_1 > 700) { // Go back
-    Serial.println("Retreat");
-    // Right Wheel
-    analogWrite(MOTOR_A1A, 0);
-    analogWrite(MOTOR_A1B, 255);
-
-    // Left Wheel
-    analogWrite(MOTOR_B1A, 0);
-    analogWrite(MOTOR_B1B, 255);
-    delay(100);
-  } else { // Stay
+void stay() {
     Serial.println("Stay");
     // Right Wheel
     analogWrite(MOTOR_A1A, 0);
@@ -129,25 +141,30 @@ void loop() {
     analogWrite(MOTOR_B1A, 0);
     analogWrite(MOTOR_B1B, 0);
     delay(100); 
-  }
-  /*
-  if (button_counter % 4 == 0){
-    Serial.print("side movement right: "); // 0 = right / 1023 = left
-    Serial.println(joystick_x_1);
+}
 
-  }
-  else if (button_counter % 4 == 1){
-    Serial.print("up movement right: "); // 0 = up / 1023 = down
-    Serial.println(joystick_y_1);
+void loop() {
+  // put your main code here, to run repeatedly:
+  joystick_x_1 = analogRead(JOY1_X);
+  joystick_y_1 = analogRead(JOY1_Y);
+  joystick_x_2 = analogRead(JOY2_X);
+  joystick_y_2 = analogRead(JOY2_Y);
+  button_1 = digitalRead(BUTTON_1);
+  button_2 = digitalRead(BUTTON_2);
 
+  if (joystick_x_1 > 800) { // Turn left
+    turn_left();
+  }  else if (joystick_x_1 < 300) { // Turn right
+    turn_right();
+  } else if (joystick_y_1 < 300) { // Go straight
+    go_forward();
+  } else if (joystick_y_1 > 700) { // Go back
+    go_back();
+  } else { // Stay
+    stay();
   }
-  else if (button_counter % 4 == 2){
-    Serial.print("side movement left: ");
-    Serial.println(joystick_x_2);
+
+  if (button_1 == 0 || button_2 == 0){
+    kick();
   }
-  else {
-    Serial.print("up movement left: ");
-    Serial.println(joystick_y_2);
-  }
-  */
 }
